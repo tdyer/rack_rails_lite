@@ -56,14 +56,7 @@ class Router
   def self.find_route(route_entries, path)
     # Find the first route for the URL path
     route_entries.find do |route|
-      if !route.segmented_path?
-        # easy, just check the route path against the URL path
-        route.path == path
-      else
-        # check that the segments that make up a path are the same.
-        # segments are delimited by the slash, '/'
-        route.same?(path)
-      end
+      route.same?(path)
     end
   end
 end
