@@ -58,12 +58,10 @@ class Route
   # return true if the route path matches the URL path.
   # TODO: more testing and robust checking.
   def same?(url_path)
-    url_segmented_path = url_path.split('/').any? { |s| s[0] == ':' }
-
     if segmented_path?
       # break the current url's path segments into an array
       # /songs/5/artists to ["songs", "5", "artists"]
-      url_path_segments = url_path.split('/').select{ |s| !s.empty? }
+      url_path_segments = url_path.split('/').select { |s| !s.empty? }
 
       # intersection of non-key segments for this route
       # and the non-key segments for url_path
@@ -78,7 +76,7 @@ class Route
 
   # array of this route's path segments, segments are delimited by slash, '/'
   def segments
-    unless @segments.present?
+    if !@segments.present?
       @segments = path.split('/').select { |s| !s.empty? }
     else
       @segments
@@ -89,7 +87,7 @@ class Route
   # Ex: For a route with a path component like /songs/:id
   # :id is a key segment
   def key_segments
-    unless @key_segments.present?
+    if !@key_segments.present?
       @key_segments ||= path.split('/').map do |s|
         s if s[0] == ':'
       end.compact
@@ -100,7 +98,7 @@ class Route
 
   # All this route's path segments without a ':'
   def non_key_segments
-    unless @non_key_segments.present?
+    if !@non_key_segments.present?
       @non_key_segments = segments - key_segments
     else
       @non_key_segments

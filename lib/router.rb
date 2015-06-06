@@ -51,8 +51,6 @@ class Router
     end
   end
 
-  private
-
   def self.find_route(route_entries, path)
     # Find the first route for the URL path
     route_entries.find do |route|
