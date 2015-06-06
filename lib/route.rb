@@ -6,20 +6,20 @@ class Route
     attr_accessor :app_namespace
   end
 
-  # path - URL path
   attr_accessor :path, :controller_name, :action_name
 
+  # Initialize each route
   def initialize(path, controller_name, action_name)
     @path, @controller_name, @action_name = path, controller_name, action_name
 
-    # create segments. A path segment is delimited by a a slash, '/'
-    segments
-
-    # create key segments. A key segment is a segment that has a leading ':'
-    key_segments
-
-    # create non-key segments. A segment that doesn't have leading ':'
-    non_key_segments
+    if segmented_path?
+      # create segments. A path segment is delimited by a a slash, '/'
+      segments
+      # create key segments. A key segment is a segment that has a leading ':'
+      key_segments
+      # create non-key segments. A segment that doesn't have leading ':'
+      non_key_segments
+    end
   end
 
   # True if this route have a path like /songs/:id or album/:album_id/songs/:id
@@ -45,7 +45,7 @@ class Route
       # values will ONLY be the set of non keys.
       values = path_segments - non_key_segments
 
-      # For every key from this route's path
+      # For every key segment from this route's path
       key_segments.each_with_index do |key, i|
         # set the params hash key from one key segment for this route.
         # and the corresponding value from the URL path segment.
@@ -64,12 +64,20 @@ class Route
       url_path_segments = url_path.split('/').select { |s| !s.empty? }
 
       # intersection of non-key segments for this route
-      # and the non-key segments for url_path
+      # and the segments for url_path
       # should be the same as this route's non-key segments
+      # Ex:
+      # this route's non-key segments are ['songs', 'artists']
+      # the url path segments are ['songs', '5', artists']
+      # then 
+      # common_segments would be:
+      # ['songs', 'artists']
+      # which is equal to this route's non-key segments
       common_segments = non_key_segments & url_path_segments
       (segments.length == url_path_segments.length) &&
         (non_key_segments == common_segments)
     else
+      # simple case where route has NO key segments
       path == url_path
     end
   end
