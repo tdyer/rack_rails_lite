@@ -1,12 +1,12 @@
 module SongsApp
+  # Controller for the Song resource
   class SongsController < ApplicationController
-
     def index
       @songs = Song.all
       # TODO: error handling
 
       # render the HTML
-      render()
+      render
     end
 
     def show

@@ -2,18 +2,16 @@
 # It has only one method, call, which will accept HTTP Requests
 # And return HTTP Responses.
 module SongsApp
+  # Rack App to Service HTTP Requests
   class SongsService
-
     # env is the Hash formed by the HTTP Request
     def call(env)
-
       request = Rack::Request.new(env)
       response = Rack::Response.new
-      response_body = ""
 
       path = request.path_info
 
-      # Dispatch to a Controller and Action and 
+      # Dispatch to a Controller and Action and
       # return a representation of a resource.
       response_body = Router.dispatch(request.request_method, path)
 
@@ -25,5 +23,4 @@ module SongsApp
       response.finish
     end
   end
-
 end
