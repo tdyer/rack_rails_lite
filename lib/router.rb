@@ -40,8 +40,22 @@ class Router
     # The routes for a specific HTTP Method, (GET, POST, ...)
     route_entries = @routes[http_method.downcase.to_sym]
 
+    found_route = find_route(route_entries, path)
+
+    # boohoo, no route found, waaaa!
+    if !found_route
+      "No Route for #{http_method} - #{path}"
+    else
+      # Run the Controller action, this will return a body content
+      found_route.invoke_action(path)
+    end
+  end
+
+  private
+
+  def self.find_route(route_entries, path)
     # Find the first route for the URL path
-    found_route = route_entries.find do |route|
+    route_entries.find do |route|
       if !route.segmented_path?
         # easy, just check the route path against the URL path
         route.path == path
@@ -50,14 +64,6 @@ class Router
         # segments are delimited by the slash, '/'
         route.same?(path)
       end
-    end
-
-    # boohoo, no route found, waaaa!
-    if !found_route
-      "No Route for #{http_method} - #{path}"
-    else
-      # Run the Controller action, this will return a body content
-      found_route.invoke_action(path)
     end
   end
 end
